@@ -14,7 +14,7 @@ export const AsciiCanvas: React.FC<AsciiCanvasProps> = ({ options, onCapture }) 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hiddenCanvasRef = useRef<HTMLCanvasElement>(null); // For processing pixels
   const prevFrameRef = useRef<Float32Array | null>(null); // Store previous frame for smoothing
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -245,7 +245,7 @@ export const AsciiCanvas: React.FC<AsciiCanvasProps> = ({ options, onCapture }) 
       const dataUrl = canvasRef.current.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = dataUrl;
-      link.download = `cyber_ascii_${Date.now()}.png`;
+      link.download = `bumblevision_${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -272,24 +272,35 @@ export const AsciiCanvas: React.FC<AsciiCanvasProps> = ({ options, onCapture }) 
         <canvas ref={canvasRef} className="block w-full h-full" />
         
         {/* Floating Controls Container */}
-        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex items-center gap-8 z-40">
+        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 flex items-center gap-6 z-40">
             {/* Screenshot Button */}
-            <button 
+            <button
                 onClick={handleScreenshotClick}
-                className="bg-black/60 hover:bg-green-900/80 text-green-400 border border-green-500/50 p-4 rounded-full backdrop-blur-md transition-all active:scale-95 hover:scale-105 hover:shadow-[0_0_15px_rgba(0,255,0,0.3)]"
                 title="Save Snapshot"
+                className="relative group flex flex-col items-center gap-1"
             >
-                <Camera className="w-6 h-6" />
+                <div className="p-3 border border-cyan-700/50 bg-black/70 backdrop-blur-md text-cyan-500 transition-all group-hover:border-cyan-400 group-hover:text-cyan-300 group-hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] active:scale-95">
+                    <Camera className="w-5 h-5" />
+                </div>
+                <span className="text-[7px] font-mono text-cyan-800 tracking-widest uppercase group-hover:text-cyan-600">Snapshot</span>
             </button>
 
             {/* Scan & Analyze Button (Primary) */}
-            <button 
+            <button
                 onClick={handleCaptureClick}
-                className="bg-green-500/20 hover:bg-green-500/40 text-green-400 border border-green-500/50 p-6 rounded-full backdrop-blur-md transition-all active:scale-95 group relative hover:shadow-[0_0_25px_rgba(0,255,0,0.5)]"
                 title="Scan & Analyze"
+                className="relative group flex flex-col items-center gap-1"
             >
-                <div className="absolute inset-0 rounded-full border border-green-500 opacity-50 animate-ping"></div>
-                <ScanEye className="w-8 h-8" />
+                <div className="relative p-5 border border-cyan-500/60 bg-black/70 backdrop-blur-md text-cyan-400 transition-all group-hover:border-cyan-300 group-hover:text-cyan-200 group-hover:shadow-[0_0_30px_rgba(34,211,238,0.45)] active:scale-95">
+                    <div className="absolute inset-0 border border-cyan-500/20 animate-ping" />
+                    {/* Corner decorators */}
+                    <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-400" />
+                    <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-400" />
+                    <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-cyan-400" />
+                    <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-400" />
+                    <ScanEye className="w-7 h-7" />
+                </div>
+                <span className="text-[7px] font-mono text-cyan-600 tracking-widest uppercase group-hover:text-cyan-400">Scan + Analyze</span>
             </button>
         </div>
     </div>
